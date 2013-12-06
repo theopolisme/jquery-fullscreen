@@ -7,14 +7,11 @@ jQuery wrapper for the JavaScript Fullscreen API
 
 ```javascript
 
-// First, initialize the fullscreen plugin (required for doing anything else):
-$.fullscreenSetup();
+// Make an element go fullscreen (returns false if error)
+$element.enterFullscreen();
 
-// Make an element go fullscreen:
-$element.fullscreen();
-
-// Then take it out of fullscreen:
-$element.fullscreen();
+// Then take it out of fullscreen (returns false if error)
+$element.exitFullscreen();
 ```
 
 Events you can listen for:
