@@ -18,6 +18,7 @@ Events you can listen for:
 
 * **fullscreen**, triggered when the page goes fullscreen
 * **defullscreen**, triggered when the page goes back to normal
+* **fullscreenerror**, triggered when fullscreening is unsuccessful
 
 The element that is made fullscreen will have the `fullscreened` class while it is fullscreen.
 

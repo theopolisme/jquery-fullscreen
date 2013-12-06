@@ -41,7 +41,12 @@
 			// When the fullscreen mode is changed, trigger the
 			// defullscreen or fullscreen events (and when exiting,
 			// also remove the `fullscreened` class)
-			$( document ).on( 'webkitfullscreenchange mozfullscreenchange fullscreenchange msfullscreenchange', handleFullscreenChange);
+			$( document ).on( 'fullscreenchange webkitfullscreenchange mozfullscreenchange msfullscreenchange', handleFullscreenChange);
+			// Convenience wrapper so that one only needs to listen for
+			// 'fullscreenerror', not all of the prefixed versions
+			$( document ).on( 'webkitfullscreenerror mozfullscreenerror msfullscreenerror', function () {
+				$( document ).trigger( $.Event( 'fullscreenerror' ) );
+			} );
 			// Fullscreen has been set up, so always return true
 			setupFullscreen = function () {
 				return true;
@@ -70,7 +75,7 @@
 				return false;
 			}
 			// Add the 'fullscreened' class to `element`
-			this.filter( ':first' ).addClass( 'fullscreened' );
+			this.first().addClass( 'fullscreened' );
 		} else {
 			return false;
 		}
