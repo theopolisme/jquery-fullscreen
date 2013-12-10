@@ -1,4 +1,4 @@
-jquery-fullscreen
+jquery-fullscreen [![Build Status](https://travis-ci.org/theopolisme/jquery-fullscreen.png?branch=master)](https://travis-ci.org/theopolisme/jquery-fullscreen)
 =================
 
 jQuery wrapper for the JavaScript Fullscreen API

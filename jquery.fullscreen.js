@@ -6,6 +6,8 @@
  * Licensed under the MIT license <http://www.opensource.org/licenses/mit-license>
  */
 ( function ( $ ) {
+	var setupFullscreen;
+
 	// Helper function
 	function returnFalse () {
 		return false;
@@ -26,36 +28,6 @@
 			// We don't mess with styling here because we don't know if we
 			// induced the fullscreening or if it was something else
 			$( document ).trigger( $.Event( 'fullscreen' ) );
-		}
-	}
-
-	/**
-	 * Set up fullscreen handling and install necessary event handlers.
-	 * Return false if fullscreen is not supported.
-	 */
-	function setupFullscreen () {
-		if ( document.fullscreenEnabled ||
-				document.mozFullScreenEnabled ||
-				document.webkitFullscreenEnabled ||
-				document.msFullscreenEnabled ) {
-			// When the fullscreen mode is changed, trigger the
-			// defullscreen or fullscreen events (and when exiting,
-			// also remove the `fullscreened` class)
-			$( document ).on( 'fullscreenchange webkitfullscreenchange mozfullscreenchange msfullscreenchange', handleFullscreenChange);
-			// Convenience wrapper so that one only needs to listen for
-			// 'fullscreenerror', not all of the prefixed versions
-			$( document ).on( 'webkitfullscreenerror mozfullscreenerror msfullscreenerror', function () {
-				$( document ).trigger( $.Event( 'fullscreenerror' ) );
-			} );
-			// Fullscreen has been set up, so always return true
-			setupFullscreen = function () {
-				return true;
-			};
-			return true;
-		} else {
-			// Always return false from now on, since fullscreen is not supported
-			setupFullscreen = returnFalse;
-			return false;
 		}
 	}
 
@@ -108,6 +80,37 @@
 			return true;
 		}
 	}
+
+	/**
+	 * Set up fullscreen handling and install necessary event handlers.
+	 * Return false if fullscreen is not supported.
+	 */
+	setupFullscreen = function () {
+		if ( document.fullscreenEnabled ||
+				document.mozFullScreenEnabled ||
+				document.webkitFullscreenEnabled ||
+				document.msFullscreenEnabled
+		) {
+			// When the fullscreen mode is changed, trigger the
+			// defullscreen or fullscreen events (and when exiting,
+			// also remove the `fullscreened` class)
+			$( document ).on( 'fullscreenchange webkitfullscreenchange mozfullscreenchange msfullscreenchange', handleFullscreenChange);
+			// Convenience wrapper so that one only needs to listen for
+			// 'fullscreenerror', not all of the prefixed versions
+			$( document ).on( 'webkitfullscreenerror mozfullscreenerror msfullscreenerror', function () {
+				$( document ).trigger( $.Event( 'fullscreenerror' ) );
+			} );
+			// Fullscreen has been set up, so always return true
+			setupFullscreen = function () {
+				return true;
+			};
+			return true;
+		} else {
+			// Always return false from now on, since fullscreen is not supported
+			setupFullscreen = returnFalse;
+			return false;
+		}
+	};
 
 	/**
 	 * Set up fullscreen handling if necessary, then make the first element

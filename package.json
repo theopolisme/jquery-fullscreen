@@ -1,0 +1,17 @@
+{
+  "name": "jquery-fullscreen",
+  "version": "1.0.0",
+  "homepage": "https://github.com/theopolisme/jquery-fullscreen",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/theopolisme/jquery-fullscreen"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "0.4.2",
+    "grunt-contrib-jshint": "0.7.2"
+  }
+}
