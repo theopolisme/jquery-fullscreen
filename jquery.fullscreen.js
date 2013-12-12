@@ -121,7 +121,7 @@
 	$.fn.enterFullscreen = function () {
 		if ( setupFullscreen() ) {
 			$.fn.enterFullscreen = enterFullscreen;
-			this.enterFullscreen();
+			return this.enterFullscreen();
 		} else {
 			$.fn.enterFullscreen = returnFalse;
 			return false;
@@ -137,7 +137,7 @@
 	$.fn.exitFullscreen = function () {
 		if ( setupFullscreen() ) {
 			$.fn.exitFullscreen = exitFullscreen;
-			this.exitFullscreen();
+			return this.exitFullscreen();
 		} else {
 			$.fn.exitFullscreen = returnFalse;
 			return false;
