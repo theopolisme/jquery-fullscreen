@@ -25,3 +25,7 @@ The element that is made fullscreen will have the `fullscreened` class while it 
 ### Note
 
 Elements can only be made fullscreen based on user interaction (for example, clicking a button), to protect against malicious uses of the fullscreen functionality.
+
+## License
+
+`jquery.fullscreen` is licensed under the [GNU General Public License version 2](http://www.gnu.org/licenses/gpl-2.0.txt). It incorporates code from [multilightbox](https://gitorious.org/multilightbox), which is also licensed under the GNU GPLv2.
