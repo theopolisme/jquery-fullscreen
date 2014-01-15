@@ -16,9 +16,9 @@ $element.exitFullscreen();
 
 Events you can listen for:
 
-* **fullscreen**, triggered when the page goes fullscreen
-* **defullscreen**, triggered when the page goes back to normal
-* **fullscreenerror**, triggered when fullscreening is unsuccessful
+* **jq-fullscreen**, triggered when the page goes fullscreen
+* **jq-defullscreen**, triggered when the page goes back to normal
+* **fullscreenerror**, triggered when fullscreening is unsuccessful (note that this is also the browser standard for fullscreen errors; in this case it simply makes the vendor-specific events behave like the standard).
 
 The element that is made fullscreen will have the `fullscreened` class while it is fullscreen.
 

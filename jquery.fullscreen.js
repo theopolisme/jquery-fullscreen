@@ -27,7 +27,7 @@
 	}
 
 	/**
-	 * On fullscreenchange, trigger appropriate event (either fullscreen or defullscreen)
+	 * On fullscreenchange, trigger appropriate event (either jq-fullscreen or jq-defullscreen)
 	 * and also remove the 'fullscreened' class from elements that are no longer fullscreen
 	 */
 	function handleFullscreenChange () {
@@ -36,34 +36,39 @@
 				!document.webkitFullscreenElement &&
 				!document.msFullscreenElement ) {
 			$( '.fullscreened' ).removeClass( 'fullscreened' );
-			$( document ).trigger( $.Event( 'defullscreen' ) );
+			$( document ).trigger( $.Event( 'jq-defullscreen' ) );
 		} else {
 			// We don't mess with styling here because we don't know if we
 			// induced the fullscreening or if it was something else
-			$( document ).trigger( $.Event( 'fullscreen' ) );
+			$( document ).trigger( $.Event( 'jq-fullscreen' ) );
 		}
 	}
 
 	function enterFullscreen () {
 		var element = this.get(0);
-		if ( element ) {
-			if ( element.requestFullscreen ) {
-				element.requestFullscreen();
-			} else if ( element.mozRequestFullScreen ) {
-				element.mozRequestFullScreen();
-			} else if ( element.webkitRequestFullscreen ) {
-				element.webkitRequestFullscreen();
-			} else if ( element.msRequestFullscreen ) {
-				element.msRequestFullscreen();
-			} else {
-				// Unable to make fullscreen
-				return false;
-			}
-			// Add the 'fullscreened' class to `element`
-			this.first().addClass( 'fullscreened' );
-		} else {
+
+		if ( !element ) {
 			return false;
 		}
+
+		if ( element.requestFullscreen ) {
+			element.requestFullscreen();
+		} else if ( element.mozRequestFullScreen ) {
+			element.mozRequestFullScreen();
+		} else if ( element.webkitRequestFullscreen ) {
+			element.webkitRequestFullscreen();
+		} else if ( element.msRequestFullscreen ) {
+			element.msRequestFullscreen();
+		} else {
+			// Unable to make fullscreen
+			return false;
+		}
+
+		// Assume that the element has now been made fullscreen
+		// and apply the fullscreened class
+		this.first().addClass( 'fullscreened' );
+
+		return true;
 	}
 
 	function exitFullscreen () {
@@ -86,12 +91,10 @@
 				// Unable to cancel fullscreen mode
 				return false;
 			}
-			// We don't need need to remove the 'fullscreened' class here,
+			// We don't need to remove the 'fullscreened' class here,
 			// because it will be removed in handleFullscreenChange.
-		} else {
-			// This element is already out of fullscreen
-			return true;
 		}
+		return true;
 	}
 
 	/**
@@ -118,11 +121,10 @@
 				return true;
 			};
 			return true;
-		} else {
-			// Always return false from now on, since fullscreen is not supported
-			setupFullscreen = returnFalse;
-			return false;
 		}
+		// Otherwise, always return false from now on, since fullscreen is not supported
+		setupFullscreen = returnFalse;
+		return false;
 	};
 
 	/**
@@ -135,10 +137,10 @@
 		if ( setupFullscreen() ) {
 			$.fn.enterFullscreen = enterFullscreen;
 			return this.enterFullscreen();
-		} else {
-			$.fn.enterFullscreen = returnFalse;
-			return false;
 		}
+		// Otherwise, always return false
+		$.fn.enterFullscreen = returnFalse;
+		return false;
 	};
 
 	/**
@@ -151,9 +153,9 @@
 		if ( setupFullscreen() ) {
 			$.fn.exitFullscreen = exitFullscreen;
 			return this.exitFullscreen();
-		} else {
-			$.fn.exitFullscreen = returnFalse;
-			return false;
 		}
+		// Otherwise, always return false
+		$.fn.exitFullscreen = returnFalse;
+		return false;
 	};
 }( jQuery ) );
