@@ -19,12 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 ( function ( $ ) {
-	var setupFullscreen;
-
-	// Helper function
-	function returnFalse () {
-		return false;
-	}
+	var setupFullscreen,
+		fsClass = 'jq-fullscreened';
 
 	/**
 	 * On fullscreenchange, trigger appropriate event (either jq-fullscreen or jq-defullscreen)
@@ -35,42 +31,55 @@
 				!document.mozFullScreenElement &&
 				!document.webkitFullscreenElement &&
 				!document.msFullscreenElement ) {
-			$( '.fullscreened' ).removeClass( 'fullscreened' );
+			$( '.' + fsClass ).data( 'isFullscreened', false ).removeClass( fsClass );
 			$( document ).trigger( $.Event( 'jq-defullscreen' ) );
 		} else {
-			// We don't mess with styling here because we don't know if we
+			// We don't mess with styling or the data attribute here because we don't know if we
 			// induced the fullscreening or if it was something else
 			$( document ).trigger( $.Event( 'jq-fullscreen' ) );
 		}
 	}
 
+	/**
+	 * Enters full screen with the "this" element in focus.
+	 * Check the .data( 'isFullscreened' ) of the return value to check
+	 * success or failure, if you're into that sort of thing.
+	 * @chainable
+	 * @return {jQuery}
+	 */
 	function enterFullscreen () {
-		var element = this.get(0);
-
-		if ( !element ) {
-			return false;
-		}
-
-		if ( element.requestFullscreen ) {
-			element.requestFullscreen();
-		} else if ( element.mozRequestFullScreen ) {
-			element.mozRequestFullScreen();
-		} else if ( element.webkitRequestFullscreen ) {
-			element.webkitRequestFullscreen();
-		} else if ( element.msRequestFullscreen ) {
-			element.msRequestFullscreen();
+		var element = this.get(0),
+			$element = this.first();
+		if ( element ) {
+			if ( element.requestFullscreen ) {
+				element.requestFullscreen();
+			} else if ( element.mozRequestFullScreen ) {
+				element.mozRequestFullScreen();
+			} else if ( element.webkitRequestFullscreen ) {
+				element.webkitRequestFullscreen();
+			} else if ( element.msRequestFullscreen ) {
+				element.msRequestFullscreen();
+			} else {
+				// Unable to make fullscreen
+				$element.data( 'isFullscreened', false );
+				return this;
+			}
+			// Add the fullscreen class and data attribute to `element`
+			$element.addClass( fsClass ).data( 'isFullscreened', true );
+			return this;
 		} else {
-			// Unable to make fullscreen
-			return false;
+			$element.data( 'isFullscreened', false );
+			return this;
 		}
-
-		// Assume that the element has now been made fullscreen
-		// and apply the fullscreened class
-		this.first().addClass( 'fullscreened' );
-
-		return true;
 	}
 
+	/**
+	 * Brings the "this" element out of fullscreen.
+	 * Check the .data( 'isFullscreened' ) of the return value to check
+	 * success or failure, if you're into that sort of thing.
+	 * @chainable
+	 * @return {jQuery}
+	 */
 	function exitFullscreen () {
 		var fullscreenElement = ( document.fullscreenElement ||
 				document.mozFullScreenElement ||
@@ -89,12 +98,16 @@
 				document.msCancelFullScreen();
 			} else {
 				// Unable to cancel fullscreen mode
-				return false;
+				return this;
 			}
-			// We don't need to remove the 'fullscreened' class here,
+			// We don't need to remove the fullscreen class here,
 			// because it will be removed in handleFullscreenChange.
+			// But we should change the data on the element so the
+			// caller can check for success.
+			this.first().data( 'isFullscreened', false );
 		}
-		return true;
+
+		return this;
 	}
 
 	/**
@@ -109,7 +122,7 @@
 		) {
 			// When the fullscreen mode is changed, trigger the
 			// defullscreen or fullscreen events (and when exiting,
-			// also remove the `fullscreened` class)
+			// also remove the fullscreen class)
 			$( document ).on( 'fullscreenchange webkitfullscreenchange mozfullscreenchange msfullscreenchange', handleFullscreenChange);
 			// Convenience wrapper so that one only needs to listen for
 			// 'fullscreenerror', not all of the prefixed versions
@@ -117,45 +130,44 @@
 				$( document ).trigger( $.Event( 'fullscreenerror' ) );
 			} );
 			// Fullscreen has been set up, so always return true
-			setupFullscreen = function () {
-				return true;
-			};
+			setupFullscreen = function () { return true; };
 			return true;
+		} else {
+			// Always return false from now on, since fullscreen is not supported
+			setupFullscreen = function() { return false; };
+			return false;
 		}
-		// Otherwise, always return false from now on, since fullscreen is not supported
-		setupFullscreen = returnFalse;
-		return false;
 	};
 
 	/**
 	 * Set up fullscreen handling if necessary, then make the first element
 	 * matching the given selector fullscreen
-	 *
-	 * @return {boolean} Fullscreen was enabled successfully
+	 * @chainable
+	 * @return {jQuery}
 	 */
 	$.fn.enterFullscreen = function () {
 		if ( setupFullscreen() ) {
 			$.fn.enterFullscreen = enterFullscreen;
 			return this.enterFullscreen();
+		} else {
+			$.fn.enterFullscreen = function () { return this; };
+			return this;
 		}
-		// Otherwise, always return false
-		$.fn.enterFullscreen = returnFalse;
-		return false;
 	};
 
 	/**
 	 * Set up fullscreen handling if necessary, then cancel fullscreen mode
 	 * for the first element matching the given selector.
-	 *
-	 * @return {boolean} The selected element is no longer in fullscreen mode
+	 * @chainable
+	 * @return {jQuery}
 	 */
 	$.fn.exitFullscreen = function () {
 		if ( setupFullscreen() ) {
 			$.fn.exitFullscreen = exitFullscreen;
 			return this.exitFullscreen();
+		} else {
+			$.fn.exitFullscreen = function () { return this; };
+			return this;
 		}
-		// Otherwise, always return false
-		$.fn.exitFullscreen = returnFalse;
-		return false;
 	};
 }( jQuery ) );

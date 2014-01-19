@@ -20,7 +20,7 @@ Events you can listen for:
 * **jq-defullscreen**, triggered when the page goes back to normal
 * **fullscreenerror**, triggered when fullscreening is unsuccessful (note that this is also the browser standard for fullscreen errors; in this case it simply makes the vendor-specific events behave like the standard).
 
-The element that is made fullscreen will have the `fullscreened` class while it is fullscreen.
+The element that is made fullscreen will have the `jq-fullscreened` class while it is fullscreen. If you wish to check if an element is fullscreen, look for the `isFullscreened` data attribute (true when fullscreen).
 
 ### Note
 
