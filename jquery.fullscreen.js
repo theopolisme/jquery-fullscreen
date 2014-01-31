@@ -23,21 +23,22 @@
 		fsClass = 'jq-fullscreened';
 
 	/**
-	 * On fullscreenchange, trigger appropriate event (either jq-fullscreen or jq-defullscreen)
-	 * and also remove the 'fullscreened' class from elements that are no longer fullscreen
+	 * On fullscreenchange, trigger a jq-fullscreen-change event
+	 * The event is given an object, which contains the fullscreened DOM element (element), if any
+	 * and a boolean value (fullscreen) indicating if we've entered or exited fullscreen mode
+	 * Also remove the 'fullscreened' class from elements that are no longer fullscreen
 	 */
 	function handleFullscreenChange () {
-		if ( !document.fullscreenElement &&
-				!document.mozFullScreenElement &&
-				!document.webkitFullscreenElement &&
-				!document.msFullscreenElement ) {
+		var fullscreenElement = document.fullscreenElement ||
+			document.mozFullScreenElement ||
+			document.webkitFullscreenElement ||
+			document.msFullscreenElement;
+
+		if ( !fullscreenElement ) {
 			$( '.' + fsClass ).data( 'isFullscreened', false ).removeClass( fsClass );
-			$( document ).trigger( $.Event( 'jq-defullscreen' ) );
-		} else {
-			// We don't mess with styling or the data attribute here because we don't know if we
-			// induced the fullscreening or if it was something else
-			$( document ).trigger( $.Event( 'jq-fullscreen' ) );
 		}
+
+		$( document ).trigger( $.Event( 'jq-fullscreen-change', { element: fullscreenElement, fullscreen: !!fullscreenElement } ) );
 	}
 
 	/**
@@ -121,7 +122,7 @@
 				document.msFullscreenEnabled
 		) {
 			// When the fullscreen mode is changed, trigger the
-			// defullscreen or fullscreen events (and when exiting,
+			// fullscreen events (and when exiting,
 			// also remove the fullscreen class)
 			$( document ).on( 'fullscreenchange webkitfullscreenchange mozfullscreenchange msfullscreenchange', handleFullscreenChange);
 			// Convenience wrapper so that one only needs to listen for
