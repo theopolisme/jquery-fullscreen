@@ -116,11 +116,7 @@
 	 * Return false if fullscreen is not supported.
 	 */
 	setupFullscreen = function () {
-		if ( document.fullscreenEnabled ||
-				document.mozFullScreenEnabled ||
-				document.webkitFullscreenEnabled ||
-				document.msFullscreenEnabled
-		) {
+		if ( $.support.fullscreen ) {
 			// When the fullscreen mode is changed, trigger the
 			// fullscreen events (and when exiting,
 			// also remove the fullscreen class)
@@ -171,4 +167,9 @@
 			return this;
 		}
 	};
+	
+	$.support.fullscreen = document.fullscreenEnabled ||
+		document.webkitFullscreenEnabled ||
+		document.mozFullScreenEnabled ||
+		document.msFullscreenEnabled;
 }( jQuery ) );
