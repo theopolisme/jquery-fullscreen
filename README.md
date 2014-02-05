@@ -7,19 +7,22 @@ jQuery wrapper for the JavaScript Fullscreen API
 
 ```javascript
 
-// Make an element go fullscreen (chainable, check $element.data( 'isFullscreened' ) for success)
+// Make an element go fullscreen
 $element.enterFullscreen();
 
-// Then take it out of fullscreen (chainable, check $element.data( 'isFullscreened' ) for success)
+// Then take it out of fullscreen
 $element.exitFullscreen();
 ```
 
 Events you can listen for:
 
-* **jq-fullscreen-change**, triggered when the page enters fullscreen or exits fullscreen
+* **jq-fullscreen-change**, triggered when the page enters fullscreen or exits fullscreen. The `fullscreen` property is also passed with the event; it is true if there is a fullscreen element, false if not. If `fullscreen` is true, `element` will also be available with the element that is currently fullscreen.
 * **fullscreenerror**, triggered when fullscreening is unsuccessful (note that this is also the browser standard for fullscreen errors; in this case it simply makes the vendor-specific events behave like the standard).
 
-The element that is made fullscreen will have the `jq-fullscreened` class while it is fullscreen. If you wish to check if an element is fullscreen, look for the `isFullscreened` data attribute (true when fullscreen).
+enterFullscreen and exitFullscreen can be called on any jQuery object; only the first element matched will be affected. The `jq-fullscreened` class is also added to elements while fullscreen. If you wish to check if an element is fullscreen, look for the `isFullscreened` data attribute (true when fullscreen). Both enterFullscreen and exitFullscreen are chainable. 
+
+`$.support.fullscreen` is true if fullscreen is supported (useful for conditionally displaying a fullscreen
+button, for example).
 
 ### Note
 
