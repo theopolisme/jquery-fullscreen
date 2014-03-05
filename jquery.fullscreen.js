@@ -131,7 +131,7 @@
 			return true;
 		} else {
 			// Always return false from now on, since fullscreen is not supported
-			setupFullscreen = function() { return false; };
+			setupFullscreen = function () { return false; };
 			return false;
 		}
 	};
@@ -167,7 +167,7 @@
 			return this;
 		}
 	};
-	
+
 	$.support.fullscreen = document.fullscreenEnabled ||
 		document.webkitFullscreenEnabled ||
 		document.mozFullScreenEnabled ||
